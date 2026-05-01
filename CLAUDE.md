@@ -15,6 +15,12 @@
 
 성별(`gender`)과 스타일(`style`, 예: 캐주얼/포멀)은 동일 기온/날씨 조건에서 후보 옷을 필터링하는 데 사용된다.
 
+필터 규칙:
+- **gender**: 요청 성별 + `UNISEX`. UNISEX 옷은 어떤 성별 요청에도 항상 포함 — 카탈로그가 작아 "남성 요청에 남성 옷만" 보여주면 결과가 너무 빈약해질 수 있어, UNISEX를 풀백 풀로 사용한다.
+- **style**: 정확 일치. CASUAL 요청에 FORMAL 옷이 끼면 추천 일관성이 깨지므로 fallback 없음.
+
+매칭된 항목은 `StyleClothes.priority` 오름차순으로 반환 (낮을수록 우선).
+
 ## 데이터 모델
 
 - **Clothes**: `id, name, category, image_url, gender, style`
