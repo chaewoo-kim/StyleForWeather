@@ -49,7 +49,9 @@
 
 ## 외부 의존성
 
-- **OpenWeatherMap (무료 티어)**: 현재 날씨 + 주간 예보. API 키는 환경변수/설정 파일로 관리하고 절대 커밋하지 않는다.
+- **OpenWeatherMap (무료 티어)**: 현재 날씨 + 주간 예보. API 키는 환경변수 `OPENWEATHERMAP_API_KEY`로 주입하며 절대 커밋하지 않는다.
+  - 호출 시 `units=metric`, `lang=kr` 고정 — 온도는 항상 섭씨로 처리.
+  - 외부의 `weather[].main` 문자열을 우리 `WeatherCondition` enum으로 매핑할 때, enum에 없는 값(Smoke, Dust, Tornado 등)은 `CLEAR`로 fallback. 추천 로직에 빈 결과가 들어가지 않게 하기 위함.
 
 ## 향후 확장
 
