@@ -1,0 +1,38 @@
+# Java / Spring Boot
+backend/build/
+backend/.gradle/
+backend/bin/
+*.class
+*.jar
+*.war
+
+# Node / React Native
+frontend/node_modules/
+frontend/.metro-health-check*
+
+# iOS
+frontend/ios/Pods/
+frontend/ios/build/
+frontend/ios/*.xcworkspace/xcuserdata/
+frontend/ios/xcuserdata/
+
+# Android
+frontend/android/app/build/
+frontend/android/.gradle/
+frontend/android/local.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.production
