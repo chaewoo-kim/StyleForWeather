@@ -18,6 +18,7 @@
 필터 규칙:
 - **gender**: 요청 성별 + `UNISEX`. UNISEX 옷은 어떤 성별 요청에도 항상 포함 — 카탈로그가 작아 "남성 요청에 남성 옷만" 보여주면 결과가 너무 빈약해질 수 있어, UNISEX를 풀백 풀로 사용한다.
 - **style**: 정확 일치. CASUAL 요청에 FORMAL 옷이 끼면 추천 일관성이 깨지므로 fallback 없음.
+- **condition fallback**: 요청 condition으로 매칭되는 `WeatherStyle`이 없으면 같은 기온 구간의 `CLEAR`로 폴백. 시드가 모든 condition을 커버하지 않아도 옷차림은 기본적으로 기온이 결정하므로, CLOUDS/MIST 같은 보조 컨디션은 CLEAR로 안전하게 매핑된다. RAIN/SNOW처럼 특수 아이템(우산/우비)이 필요한 condition은 별도 시드를 두면 정확 매칭이 우선한다.
 
 매칭된 항목은 `StyleClothes.priority` 오름차순으로 반환 (낮을수록 우선).
 
@@ -58,6 +59,9 @@
 - **OpenWeatherMap (무료 티어)**: 현재 날씨 + 주간 예보. API 키는 환경변수 `OPENWEATHERMAP_API_KEY`로 주입하며 절대 커밋하지 않는다.
   - 호출 시 `units=metric`, `lang=kr` 고정 — 온도는 항상 섭씨로 처리.
   - 외부의 `weather[].main` 문자열을 우리 `WeatherCondition` enum으로 매핑할 때, enum에 없는 값(Smoke, Dust, Tornado 등)은 `CLEAR`로 fallback. 추천 로직에 빈 결과가 들어가지 않게 하기 위함.
+- **Geolocation (`@react-native-community/geolocation`)**: 홈 화면에서 사용자의 현재 좌표를 받아 `/api/weather?lat&lon`에 전달.
+  - iOS Info.plist에 `NSLocationWhenInUseUsageDescription` 한국어 사용 사유 필수 — 비어있으면 권한 다이얼로그가 뜨지 않고 곧바로 거부 처리된다.
+  - 프론트 → 백엔드 baseURL은 `Platform.select`로 분기: iOS 시뮬레이터는 `http://localhost:8080`, Android 에뮬레이터는 `http://10.0.2.2:8080` (에뮬레이터 → 호스트 머신 매핑).
 
 ## 향후 확장
 
