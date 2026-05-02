@@ -91,12 +91,24 @@ class RecommendServiceTest {
     }
 
     @Test
-    @DisplayName("기온 구간/날씨 조건에 매칭되는 WeatherStyle 없으면 빈 리스트")
+    @DisplayName("기온 구간 매칭 자체가 없으면 빈 리스트 (CLEAR 폴백도 무효)")
     void recommend_returnsEmptyWhenNoMatch() {
         List<Recommendation> result = recommendService.recommend(
                 30, WeatherCondition.RAIN, Gender.MALE, Style.CASUAL);
 
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("정확한 condition 매칭이 없으면 같은 기온의 CLEAR로 폴백한다")
+    void recommend_fallsBackToClearWhenConditionMissing() {
+        Clothes hoodie = saveClothes("후디", Category.TOP, Gender.UNISEX, Style.CASUAL);
+        link(mildClear, hoodie, 0);
+
+        List<Recommendation> result = recommendService.recommend(
+                17, WeatherCondition.CLOUDS, Gender.MALE, Style.CASUAL);
+
+        assertThat(result).extracting(Recommendation::name).containsExactly("후디");
     }
 
     private Clothes saveClothes(String name, Category category, Gender gender, Style style) {

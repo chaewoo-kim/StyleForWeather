@@ -31,6 +31,12 @@ public class RecommendService {
         Optional<WeatherStyle> match = weatherStyleRepository
                 .findFirstByMinTempLessThanEqualAndMaxTempGreaterThanEqualAndWeatherCondition(temp, temp, condition);
 
+        if (match.isEmpty() && condition != WeatherCondition.CLEAR) {
+            match = weatherStyleRepository
+                    .findFirstByMinTempLessThanEqualAndMaxTempGreaterThanEqualAndWeatherCondition(
+                            temp, temp, WeatherCondition.CLEAR);
+        }
+
         if (match.isEmpty()) {
             return List.of();
         }
