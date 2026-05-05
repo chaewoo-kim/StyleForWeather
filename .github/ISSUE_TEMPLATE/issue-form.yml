@@ -4,15 +4,6 @@ title: '[Label] 이슈 제목을 입력해주세요'
 labels: []
 
 body:
-  - type: input
-    id: parentKey
-    attributes:
-      label: '🎟️ 상위 작업 (Epic Number)'
-      description: '상위 작업의 Epic Number를 기입해주세요'
-      placeholder: 'FLOW-00'
-    validations:
-      required: true
-
   - type: dropdown
     id: label
     attributes:
