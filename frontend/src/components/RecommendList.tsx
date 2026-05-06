@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import { Recommendation } from '../types';
 import { CATEGORY_LABEL } from '../types/conditions';
 import { colors } from '../theme/colors';
+import { absoluteUrl } from '../api/client';
 
 interface Props {
   items: Recommendation[];
@@ -29,21 +31,30 @@ export function RecommendList({ items }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>오늘의 추천</Text>
-      {items.map((item, idx) => (
-        <View
-          key={item.clothesId}
-          style={[styles.row, idx === items.length - 1 && styles.rowLast]}>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>
-              {CATEGORY_LABEL[item.category]}
-            </Text>
+      {items.map((item, idx) => {
+        const uri = absoluteUrl(item.imageUrl);
+        return (
+          <View
+            key={item.clothesId}
+            style={[styles.row, idx === items.length - 1 && styles.rowLast]}>
+            <View style={styles.thumb}>
+              {uri ? (
+                <SvgUri uri={uri} width="100%" height="100%" />
+              ) : (
+                <Text style={styles.thumbFallback}>
+                  {CATEGORY_LABEL[item.category]}
+                </Text>
+              )}
+            </View>
+            <View style={styles.body}>
+              <Text style={styles.name}>{item.name}</Text>
+              <Text style={styles.meta}>
+                {CATEGORY_LABEL[item.category]} · {STYLE_LABEL[item.style] ?? item.style}
+              </Text>
+            </View>
           </View>
-          <View style={styles.body}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.meta}>{STYLE_LABEL[item.style] ?? item.style}</Text>
-          </View>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }
@@ -75,15 +86,17 @@ const styles = StyleSheet.create({
   rowLast: {
     borderBottomWidth: 0,
   },
-  tag: {
-    width: 56,
-    paddingVertical: 5,
-    backgroundColor: colors.primaryMuted,
-    borderRadius: 6,
+  thumb: {
+    width: 64,
+    height: 64,
+    borderRadius: 12,
     marginRight: 14,
+    overflow: 'hidden',
+    backgroundColor: colors.primaryMuted,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  tagText: {
+  thumbFallback: {
     fontSize: 12,
     color: colors.primary,
     fontWeight: '600',
