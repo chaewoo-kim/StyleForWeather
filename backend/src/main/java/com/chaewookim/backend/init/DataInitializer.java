@@ -57,49 +57,50 @@ public class DataInitializer implements CommandLineRunner {
     private Map<String, Clothes> saveClothes() {
         Map<String, Clothes> map = new HashMap<>();
 
-        addClothes(map, "히트텍", Category.INNER, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "흰색 반팔티", Category.TOP, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "긴팔 셔츠", Category.TOP, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "후디", Category.TOP, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "니트", Category.TOP, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "린넨 셔츠", Category.TOP, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "피케 셔츠", Category.TOP, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "원피스", Category.TOP, Gender.FEMALE, Style.CASUAL);
-        addClothes(map, "정장 셔츠", Category.TOP, Gender.UNISEX, Style.FORMAL);
+        addClothes(map, "히트텍", "heattech", Category.INNER, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "흰색 반팔티", "tshirt-white", Category.TOP, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "긴팔 셔츠", "shirt-long", Category.TOP, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "후디", "hoodie", Category.TOP, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "니트", "knit", Category.TOP, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "린넨 셔츠", "shirt-linen", Category.TOP, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "피케 셔츠", "shirt-pique", Category.TOP, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "원피스", "dress", Category.TOP, Gender.FEMALE, Style.CASUAL);
+        addClothes(map, "정장 셔츠", "shirt-formal", Category.TOP, Gender.UNISEX, Style.FORMAL);
 
-        addClothes(map, "청바지", Category.BOTTOM, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "면바지", Category.BOTTOM, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "면 반바지", Category.BOTTOM, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "플리츠 스커트", Category.BOTTOM, Gender.FEMALE, Style.CASUAL);
-        addClothes(map, "정장 바지", Category.BOTTOM, Gender.UNISEX, Style.FORMAL);
+        addClothes(map, "청바지", "jeans", Category.BOTTOM, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "면바지", "pants-cotton", Category.BOTTOM, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "면 반바지", "shorts", Category.BOTTOM, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "플리츠 스커트", "skirt-pleated", Category.BOTTOM, Gender.FEMALE, Style.CASUAL);
+        addClothes(map, "정장 바지", "pants-formal", Category.BOTTOM, Gender.UNISEX, Style.FORMAL);
 
-        addClothes(map, "패딩 점퍼", Category.OUTER, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "코트", Category.OUTER, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "트렌치코트", Category.OUTER, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "야상", Category.OUTER, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "카디건", Category.OUTER, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "우비", Category.OUTER, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "패딩 점퍼", "padding", Category.OUTER, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "코트", "coat", Category.OUTER, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "트렌치코트", "trenchcoat", Category.OUTER, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "야상", "field-jacket", Category.OUTER, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "카디건", "cardigan", Category.OUTER, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "우비", "raincoat", Category.OUTER, Gender.UNISEX, Style.CASUAL);
 
-        addClothes(map, "운동화", Category.SHOES, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "구두", Category.SHOES, Gender.UNISEX, Style.FORMAL);
+        addClothes(map, "운동화", "sneakers", Category.SHOES, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "구두", "dress-shoes", Category.SHOES, Gender.UNISEX, Style.FORMAL);
 
-        addClothes(map, "발열 양말", Category.SOCKS, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "발열 양말", "socks-thermal", Category.SOCKS, Gender.UNISEX, Style.CASUAL);
 
-        addClothes(map, "우산", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "캡모자", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "비니", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "목도리", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
-        addClothes(map, "장갑", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "우산", "umbrella", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "캡모자", "cap", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "비니", "beanie", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "목도리", "scarf", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
+        addClothes(map, "장갑", "gloves", Category.ACCESSORY, Gender.UNISEX, Style.CASUAL);
 
         return map;
     }
 
-    private void addClothes(Map<String, Clothes> map, String name, Category category, Gender gender, Style style) {
+    private void addClothes(Map<String, Clothes> map, String name, String slug, Category category, Gender gender, Style style) {
         Clothes saved = clothesRepository.save(Clothes.builder()
                 .name(name)
                 .category(category)
                 .gender(gender)
                 .style(style)
+                .imageUrl("/images/clothes/" + slug + ".svg")
                 .build());
         map.put(name, saved);
     }

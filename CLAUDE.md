@@ -63,10 +63,17 @@
   - iOS Info.plist에 `NSLocationWhenInUseUsageDescription` 한국어 사용 사유 필수 — 비어있으면 권한 다이얼로그가 뜨지 않고 곧바로 거부 처리된다.
   - 프론트 → 백엔드 baseURL은 `Platform.select`로 분기: iOS 시뮬레이터는 `http://localhost:8080`, Android 에뮬레이터는 `http://10.0.2.2:8080` (에뮬레이터 → 호스트 머신 매핑).
 
+## 옷 이미지
+
+- 백엔드 정적 서빙: `backend/src/main/resources/static/images/clothes/<slug>.svg` → `GET /images/clothes/<slug>.svg`
+- 시드(`DataInitializer`)에서 슬러그 기반으로 `Clothes.imageUrl = "/images/clothes/<slug>.svg"` 채움
+- 프론트는 `client.ts`의 `absoluteUrl()` 헬퍼로 baseURL 합쳐 절대 URL 만들고, `RecommendList`의 `SvgUri`(react-native-svg)로 렌더
+- 현재 SVG는 카테고리 색상 + 이모지 + 한글 라벨 placeholder. `scripts/generate_clothes_svg.py`로 28개 일괄 생성. 실제 옷 이미지는 추후 동일 슬러그로 덮어쓰면 됨 — 형식이 PNG/JPG로 바뀌면 시드의 확장자도 같이 수정.
+
 ## 향후 확장
 
 - 주간 예보 기반 주간 스타일 추천 — `WeatherStyle` 매칭을 N일치 반복 적용
-- 옷 이미지/아이콘 — `Clothes.image_url` 활용
+- 옷 이미지 실제 자산 교체 — placeholder SVG → 실제 이미지(라이선스 무료 소스)
 
 ## 기술 스택
 
