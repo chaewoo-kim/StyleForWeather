@@ -46,3 +46,15 @@ export interface Clothes {
   gender: Gender;
   style: Style;
 }
+
+export interface DailyForecast {
+  date: string;
+  temperature: number;
+  condition: WeatherCondition;
+  recommendations: Recommendation[];
+}
+
+export interface WeeklyForecast {
+  locationName: string;
+  daily: DailyForecast[];
+}

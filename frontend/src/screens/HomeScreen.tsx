@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   RefreshControl,
   ScrollView,
@@ -6,10 +6,10 @@ import {
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import { useFocusEffect } from '@react-navigation/native';
-import { CurrentWeather, Recommendation } from '../types';
-import { getWeatherByCoords } from '../api/weather';
-import { getRecommendations } from '../api/recommend';
+import { CurrentWeather, WeeklyForecast } from '../types';
+import { getForecastByCoords } from '../api/forecast';
 import { WeatherCard } from '../components/WeatherCard';
+import { ForecastList } from '../components/ForecastList';
 import { RecommendList } from '../components/RecommendList';
 import { ErrorView, LoadingView } from '../components/StatusView';
 import { useSettings } from '../storage/SettingsContext';
@@ -33,8 +33,8 @@ function getCurrentPosition(): Promise<Coords> {
 
 export function HomeScreen() {
   const { settings, loaded } = useSettings();
-  const [weather, setWeather] = useState<CurrentWeather | null>(null);
-  const [items, setItems] = useState<Recommendation[]>([]);
+  const [forecast, setForecast] = useState<WeeklyForecast | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -43,15 +43,14 @@ export function HomeScreen() {
     setError(null);
     try {
       const coords = await getCurrentPosition();
-      const w = await getWeatherByCoords(coords.lat, coords.lon);
-      setWeather(w);
-      const recs = await getRecommendations({
-        temp: Math.round(w.temperature),
-        condition: w.condition,
-        gender: settings.gender,
-        style: settings.style,
-      });
-      setItems(recs);
+      const f = await getForecastByCoords(
+        coords.lat,
+        coords.lon,
+        settings.gender,
+        settings.style,
+      );
+      setForecast(f);
+      setSelectedIndex(0);
     } catch (e: any) {
       const msg =
         e?.code === 1 || e?.PERMISSION_DENIED
@@ -81,11 +80,11 @@ export function HomeScreen() {
     setRefreshing(false);
   }, [load]);
 
-  if (loading && !weather) {
+  if (loading && !forecast) {
     return <LoadingView message="날씨 정보를 불러오는 중..." />;
   }
 
-  if (error && !weather) {
+  if (error && !forecast) {
     return (
       <ErrorView
         message={error}
@@ -97,6 +96,16 @@ export function HomeScreen() {
     );
   }
 
+  const selected = forecast?.daily[selectedIndex];
+  const cardWeather: CurrentWeather | null =
+    forecast && selected
+      ? {
+          locationName: forecast.locationName,
+          temperature: selected.temperature,
+          condition: selected.condition,
+        }
+      : null;
+
   return (
     <ScrollView
       style={styles.container}
@@ -104,8 +113,15 @@ export function HomeScreen() {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-      {weather ? <WeatherCard weather={weather} /> : null}
-      <RecommendList items={items} />
+      {cardWeather ? <WeatherCard weather={cardWeather} /> : null}
+      {forecast ? (
+        <ForecastList
+          daily={forecast.daily}
+          selectedIndex={selectedIndex}
+          onSelect={setSelectedIndex}
+        />
+      ) : null}
+      <RecommendList items={selected?.recommendations ?? []} />
     </ScrollView>
   );
 }
