@@ -44,15 +44,20 @@
 - `GET /api/weather?lat={위도}&lon={경도}` — 좌표 기반 현재 날씨
 - `GET /api/weather?city={도시명}` — 도시명 기반 현재 날씨
 - `GET /api/recommend?temp={기온}&condition={날씨}&gender={성별}&style={스타일}` — 추천 결과
+- `GET /api/forecast?lat&lon&gender&style` / `?city&gender&style` — 5일 예보 + 일별 추천을 `WeeklyForecast(locationName, daily[])`로 한 번에 반환
 - `GET /api/clothes`, `GET /api/clothes/{category}` — 옷 카탈로그 조회
 
 추천 API는 `temp + condition`으로 매칭되는 `WeatherStyle`을 찾고, 그에 연결된 `Clothes` 중 `gender + style` 필터를 통과한 항목을 반환한다.
 
+forecast API는 OpenWeatherMap `/forecast` (5일 / 3시간 단위)를 호출해 `city.timezone` offset 적용 후 일별 정오에 가장 가까운 슬롯만 추출하고, 각 일자에 대해 `RecommendService`를 5번 호출해 일별 (temp, condition) 조합의 추천을 함께 묶어 반환한다.
+
 ## 화면
 
-- **홈**: GPS 위치 기반 현재 날씨 + 오늘의 추천 스타일
-- **검색**: 도시명 검색 → 해당 도시 날씨 + 추천
+- **홈**: GPS 위치 기반 5일 예보 + 일자 카드 탭 시 그 날의 추천 옷 표시
+- **검색**: 도시명 검색 → 해당 도시 5일 예보 + 일자 카드 탭 시 추천 옷 표시
 - **설정**: 온도 단위, 성별, 선호 스타일 (AsyncStorage에 저장)
+
+홈/검색은 `/api/forecast` 1회 호출로 5일치 데이터를 받아 첫 일자(오늘)를 자동 선택한다. `ForecastList`(가로 스크롤 카드 5개)에서 다른 카드를 탭하면 `WeatherCard`와 `RecommendList`가 그 일자의 (기온, condition, 추천 옷)으로 스왑된다.
 
 ## 외부 의존성
 
@@ -72,8 +77,8 @@
 
 ## 향후 확장
 
-- 주간 예보 기반 주간 스타일 추천 — `WeatherStyle` 매칭을 N일치 반복 적용
 - 옷 이미지 실제 자산 교체 — placeholder SVG → 실제 이미지(라이선스 무료 소스)
+- FORMAL 시드 보강 — 현재 FORMAL은 MILD(17~22°C, CLEAR)에만 매핑되어 다른 기온대에선 빈 추천. 다양한 기온대에 FORMAL 옷 매핑 추가 검토
 
 ## 기술 스택
 

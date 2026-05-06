@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { CurrentWeather, Recommendation } from '../types';
-import { getWeatherByCity } from '../api/weather';
-import { getRecommendations } from '../api/recommend';
+import { CurrentWeather, WeeklyForecast } from '../types';
+import { getForecastByCity } from '../api/forecast';
 import { WeatherCard } from '../components/WeatherCard';
+import { ForecastList } from '../components/ForecastList';
 import { RecommendList } from '../components/RecommendList';
 import { useSettings } from '../storage/SettingsContext';
 import { colors } from '../theme/colors';
@@ -19,8 +19,8 @@ import { colors } from '../theme/colors';
 export function SearchScreen() {
   const { settings } = useSettings();
   const [query, setQuery] = useState('');
-  const [weather, setWeather] = useState<CurrentWeather | null>(null);
-  const [items, setItems] = useState<Recommendation[]>([]);
+  const [forecast, setForecast] = useState<WeeklyForecast | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,18 +31,11 @@ export function SearchScreen() {
     setLoading(true);
     setError(null);
     try {
-      const w = await getWeatherByCity(city);
-      setWeather(w);
-      const recs = await getRecommendations({
-        temp: Math.round(w.temperature),
-        condition: w.condition,
-        gender: settings.gender,
-        style: settings.style,
-      });
-      setItems(recs);
+      const f = await getForecastByCity(city, settings.gender, settings.style);
+      setForecast(f);
+      setSelectedIndex(0);
     } catch (e: any) {
-      setWeather(null);
-      setItems([]);
+      setForecast(null);
       const status = e?.response?.status;
       if (status === 404) {
         setError('도시를 찾을 수 없습니다.');
@@ -53,6 +46,16 @@ export function SearchScreen() {
       setLoading(false);
     }
   };
+
+  const selected = forecast?.daily[selectedIndex];
+  const cardWeather: CurrentWeather | null =
+    forecast && selected
+      ? {
+          locationName: forecast.locationName,
+          temperature: selected.temperature,
+          condition: selected.condition,
+        }
+      : null;
 
   return (
     <ScrollView
@@ -82,8 +85,17 @@ export function SearchScreen() {
       </View>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      {weather ? <WeatherCard weather={weather} /> : null}
-      {weather ? <RecommendList items={items} /> : null}
+      {cardWeather ? <WeatherCard weather={cardWeather} /> : null}
+      {forecast ? (
+        <ForecastList
+          daily={forecast.daily}
+          selectedIndex={selectedIndex}
+          onSelect={setSelectedIndex}
+        />
+      ) : null}
+      {forecast ? (
+        <RecommendList items={selected?.recommendations ?? []} />
+      ) : null}
     </ScrollView>
   );
 }
